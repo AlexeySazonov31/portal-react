@@ -19,7 +19,6 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
@@ -31,13 +30,14 @@ export const Login = () => {
   const onSubmit = async (values) => {
     const data = await dispatch(fetchLogin(values));
 
-    if(!data.payload){
-      return alert("Failed to log in");
+    if (!data.payload) {
+      console.log(data.error);
+      return alert(
+        `Failed to register new Account. ${data.error.message ?? ""}`
+      );
     }
 
-    console.log(data);
-
-    if(Object.hasOwn(data.payload.data, 'token')){
+    if (Object.hasOwn(data.payload.data, "token")) {
       window.localStorage.setItem("token", data.payload.data.token);
     }
   };
@@ -56,8 +56,8 @@ export const Login = () => {
           className={styles.field}
           label="E-Mail"
           type="email"
-          error={Boolean(errors.email?.message)}
           fullWidth
+          error={Boolean(errors.email?.message)}
           helperText={errors.email?.message}
           {...register("email", { required: "Input email" })}
         />
@@ -66,10 +66,17 @@ export const Login = () => {
           label="password"
           error={Boolean(errors.password?.message)}
           fullWidth
+          type="password"
           helperText={errors.password?.message}
           {...register("password", { required: "Input password" })}
         />
-        <Button type="submit" size="large" variant="contained" fullWidth>
+        <Button
+          disabled={!isValid}
+          type="submit"
+          size="large"
+          variant="contained"
+          fullWidth
+        >
           Login
         </Button>
       </form>

@@ -29,6 +29,25 @@ const authSlice = createAppSlice({
                 },
             }
         ),
+        fetchRegister: create.asyncThunk(async (params) => {
+            const res = await axios.post("/auth/register", params);
+            return res;
+        },
+            {
+                pending: (state) => {
+                    state.data = null;
+                    state.status = "loading";
+                },
+                fulfilled: (state, action) => {
+                    state.data = action.payload.data;
+                    state.status = "loaded";
+                },
+                rejected: (state) => {
+                    state.data = null;
+                    state.status = "error";
+                },
+            }
+        ),
         fetchAuthMe: create.asyncThunk(async () => {
             const res = await axios.get("/auth/me");
             return res;
@@ -56,4 +75,4 @@ const authSlice = createAppSlice({
 
 export const selectIsAuth = (state) => Boolean(state.auth.data);
 export const authReducer = authSlice.reducer;
-export const { fetchLogin, fetchAuthMe, logout } = authSlice.actions;
+export const { fetchLogin, fetchAuthMe, fetchRegister, logout } = authSlice.actions;
