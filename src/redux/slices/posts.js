@@ -16,11 +16,10 @@ const postsSlice = createAppSlice({
     name: "posts",
     initialState,
     reducers: (create) => ({
-        // fetchPosts: create.asyncThunk( "posts/fetchPosts", async () => {
-        fetchPosts: create.asyncThunk( async () => {
-                const res = await axios.get("/posts");
-                return res;
-            },
+        fetchPosts: create.asyncThunk(async () => {
+            const res = await axios.get("/posts");
+            return res;
+        },
             {
                 pending: (state) => {
                     state.posts.items = [];
@@ -36,27 +35,37 @@ const postsSlice = createAppSlice({
                 },
             }
         ),
-        fetchTags: create.asyncThunk( async () => {
+        fetchTags: create.asyncThunk(async () => {
             const res = await axios.get("/tags");
             return res;
         },
+            {
+                pending: (state) => {
+                    state.tags.items = [];
+                    state.tags.status = "loading";
+                },
+                fulfilled: (state, action) => {
+                    state.tags.items = action.payload.data;
+                    state.tags.status = "loaded";
+                },
+                rejected: (state) => {
+                    state.tags.items = [];
+                    state.tags.status = "error";
+                },
+            }
+        ),
+        fetchRemovePost: create.asyncThunk( async (id) => {
+            await axios.delete(`/posts/${id}`);
+        },
         {
-            pending: (state) => {
-                state.tags.items = [];
-                state.tags.status = "loading";
-            },
-            fulfilled: (state, action) => {
-                state.tags.items = action.payload.data;
-                state.tags.status = "loaded";
-            },
-            rejected: (state) => {
-                state.tags.items = [];
-                state.tags.status = "error";
+            pending: (state, action) => {
+                console.log(action.meta.arg);
+                state.posts.items = state.posts.items.filter(obj => obj._id !== action.meta.arg );
             },
         }
-    )
+    ),
     }),
 })
 
 export const postsReducer = postsSlice.reducer;
-export const { fetchPosts, fetchTags } = postsSlice.actions;
+export const { fetchPosts, fetchTags, fetchRemovePost } = postsSlice.actions;

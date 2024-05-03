@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
@@ -15,15 +15,32 @@ import styles from "./AddPost.module.scss";
 import { selectIsAuth } from "../../redux/slices/auth";
 import axios from "../../axios";
 
+// without post text (the main text of the article), because SimpleMDE uses Callback
+const initialPostInfo = {
+  title: "",
+  imageUrl: "",
+  tags: "",
+};
+
 export const AddPost = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
+  const isEditing = Boolean(id);
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [text, setText] = React.useState("");
-  const [title, setTitle] = React.useState("");
-  const [tags, setTags] = React.useState([]);
-  const [imageUrl, setImageUrl] = React.useState("");
+  // the main text of the article is separate, since we use SimpleMDE with useCallback
+  const [postInfo, setPostInfo] = React.useState(initialPostInfo);
+  const [textPost, setTextPost] = React.useState("");
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPostInfo({
+      ...postInfo,
+      [name]: value,
+    });
+  };
+
   const inputFileRef = React.useRef(null);
 
   const handleChangeFile = async (event) => {
@@ -32,7 +49,7 @@ export const AddPost = () => {
       const file = event.target.files[0];
       formData.append("image", file);
       const { data } = await axios.post("/upload", formData);
-      setImageUrl(data.url);
+      setPostInfo({ ...postInfo, imageUrl: data.url });
     } catch (error) {
       console.warn(error);
       alert("Error uploading the file!");
@@ -40,17 +57,36 @@ export const AddPost = () => {
   };
 
   const onClickRemoveImage = () => {
-    setImageUrl("");
+    setPostInfo({ ...postInfo, imageUrl: "" });
   };
 
-  const onChange = React.useCallback((value) => {
-    setText(value);
+  const onChangeText = React.useCallback((value) => {
+    setTextPost(value);
+  }, []);
+
+  React.useEffect(() => {
+    if (id) {
+      axios
+        .get(`/posts/${id}`)
+        .then(({ data }) => {
+          setPostInfo({
+            title: data.title,
+            tags: data.tags.length > 0 ? data.tags.join(", ") : "",
+            imageUrl: data.imageUrl ? data.imageUrl : "",
+          });
+          setTextPost(data.text);
+        })
+        .catch((err) => {
+          console.warn(err);
+          alert("Error receiving the article");
+        });
+    }
   }, []);
 
   const options = React.useMemo(
     () => ({
       spellChecker: false,
-      maxHeight: "400px",
+      maxHeight: "350px",
       autofocus: true,
       placeholder: "Введите текст...",
       status: false,
@@ -67,20 +103,21 @@ export const AddPost = () => {
       setIsLoading(true);
 
       const fields = {
-        title,
-        text,
+        title: postInfo.title,
+        text: textPost,
+        imageUrl: postInfo.imageUrl,
+        tags: postInfo.tags.length > 0 ? postInfo.tags
+        .replace(/(,\s)|\s|,/g, "<%>")
+        .split("<%>") : [],
       };
-      if(imageUrl){
-        fields["imageUrl"] = imageUrl;
-      }
-      if(tags.length > 0){
-        fields["tags"] = tags.replace(/(,\s)|\s|,/g,"<%>").split("<%>");
-      }
 
-      const { data } = await axios.post("/posts", fields);
-      const id = data._id;
+      const { data } = isEditing
+        ? await axios.patch(`/posts/${id}`, fields) // edit exist post
+        : await axios.post("/posts", fields); // publish new post
 
-      navigate(`/posts/${id}`);
+      const idForRedirect = isEditing ? id : data._id;
+
+      navigate(`/posts/${idForRedirect}`);
     } catch (error) {
       console.warn(error);
       alert("Error uploading the file!");
@@ -95,6 +132,9 @@ export const AddPost = () => {
     <Paper style={{ padding: 30 }}>
       <Stack
         spacing={{ xs: 1, sm: 2 }}
+        sx={{
+          mb: 2,
+        }}
         justifyContent="space-between"
         direction="row"
         useFlexGap
@@ -115,7 +155,7 @@ export const AddPost = () => {
           onChange={handleChangeFile}
           hidden
         />
-        {imageUrl && (
+        {postInfo.imageUrl && (
           <>
             <Item>
               <Button
@@ -126,16 +166,16 @@ export const AddPost = () => {
                 Delete image
               </Button>
             </Item>
-            <Item>
-              <img
-                className={styles.image}
-                src={`http://localhost:4444${imageUrl}`}
-                alt="Uploaded"
-              />
-            </Item>
           </>
         )}
       </Stack>
+      {postInfo.imageUrl && (
+        <img
+          className={styles.image}
+          src={`http://localhost:4444${postInfo.imageUrl}`}
+          alt="Uploaded"
+        />
+      )}
 
       <br />
       <br />
@@ -144,26 +184,28 @@ export const AddPost = () => {
         variant="standard"
         placeholder="Заголовок статьи..."
         fullWidth
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={postInfo.title}
+        name="title"
+        onChange={handleInputChange}
       />
       <TextField
         classes={{ root: styles.tags }}
         variant="standard"
         placeholder="Тэги"
         fullWidth
-        value={tags}
-        onChange={(e) => setTags(e.target.value)}
+        name="tags"
+        value={postInfo.tags}
+        onChange={handleInputChange}
       />
       <SimpleMDE
         className={styles.editor}
-        value={text}
-        onChange={onChange}
+        value={textPost}
+        onChange={onChangeText}
         options={options}
       />
       <div className={styles.buttons}>
         <Button onClick={onSubmit} size="large" variant="contained">
-          Publish
+          {isEditing ? "Save" : "Publish"}
         </Button>
         <a href="/">
           <Button size="large">Cancel</Button>
