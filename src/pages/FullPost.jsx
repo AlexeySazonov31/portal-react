@@ -37,7 +37,7 @@ export const FullPost = () => {
         title={data.title}
         imageUrl={ data.imageUrl ? `${process.env.REACT_APP_API_URI}${data.imageUrl}` : ""}
         user={data.user}
-        createdAt={data.createdAt}
+        updatedAt={data.updatedAt}
         viewsCount={data.viewsCount}
         commentsCount={3}
         tags={data.tags}

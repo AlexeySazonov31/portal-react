@@ -9,7 +9,7 @@ import axios from "../axios.js";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
-import { fetchPosts, fetchTags } from "../redux/slices/posts.js";
+import { fetchPosts, fetchTags, fetchPopularPosts } from "../redux/slices/posts.js";
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -17,24 +17,35 @@ export const Home = () => {
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags } = useSelector((state) => state.posts);
 
+  const [tabValue, setTabValue] = React.useState(0);
+
+  const handleChangeTab = (e, newValue) => {
+    setTabValue(newValue);
+  };
+
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
   React.useEffect(() => {
-    dispatch(fetchPosts());
-    dispatch(fetchTags());
-  }, []);
+    if( tabValue === 0 ){ // normal
+      dispatch(fetchPosts());
+      dispatch(fetchTags());
+    } else if (tabValue === 1){ // popular
+      dispatch(fetchPopularPosts());
+      dispatch(fetchTags());
+    }
+  }, [tabValue]);
 
   return (
     <>
       <Tabs
         style={{ marginBottom: 15 }}
-        value={0}
-        aria-label="basic tabs example"
+        aria-label="tabs for sorting posts"
+        value={tabValue} onChange={handleChangeTab}
       >
-        <Tab label="Новые" />
-        <Tab label="Популярные" />
+        <Tab label="New" />
+        <Tab label="Popular" />
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
@@ -48,7 +59,7 @@ export const Home = () => {
                 title={obj.title}
                 imageUrl={ obj.imageUrl ? `${process.env.REACT_APP_API_URI}${obj.imageUrl}` : ""}
                 user={obj.user}
-                createdAt={obj.createdAt}
+                updatedAt={obj.updatedAt}
                 viewsCount={obj.viewsCount}
                 commentsCount={3}
                 tags={obj.tags}

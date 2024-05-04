@@ -35,6 +35,25 @@ const postsSlice = createAppSlice({
                 },
             }
         ),
+        fetchPopularPosts: create.asyncThunk(async () => {
+            const res = await axios.get("/posts/popular");
+            return res;
+        },
+            {
+                pending: (state) => {
+                    state.posts.items = [];
+                    state.posts.status = "loading";
+                },
+                fulfilled: (state, action) => {
+                    state.posts.items = action.payload.data;
+                    state.posts.status = "loaded";
+                },
+                rejected: (state) => {
+                    state.posts.items = [];
+                    state.posts.status = "error";
+                },
+            }
+        ),
         fetchTags: create.asyncThunk(async () => {
             const res = await axios.get("/tags");
             return res;
@@ -68,4 +87,4 @@ const postsSlice = createAppSlice({
 })
 
 export const postsReducer = postsSlice.reducer;
-export const { fetchPosts, fetchTags, fetchRemovePost } = postsSlice.actions;
+export const { fetchPosts, fetchPopularPosts, fetchTags, fetchRemovePost } = postsSlice.actions;
