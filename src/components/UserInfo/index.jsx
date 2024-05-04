@@ -7,7 +7,7 @@ export const UserInfo = ({ avatarUrl, fullName, updatedAt }) => {
     <div className={styles.root}>
       <Avatar
         className={styles.avatar}
-        src={avatarUrl || ""}
+        src={avatarUrl ? process.env.REACT_APP_API_URI + avatarUrl : ""}
         alt={fullName}
       />
       {/* <img className={styles.avatar} src={avatarUrl || ''} alt={fullName} /> */}

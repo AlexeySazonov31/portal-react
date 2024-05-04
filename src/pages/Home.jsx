@@ -4,17 +4,17 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Grid from "@mui/material/Grid";
 
-import axios from "../axios.js";
-
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
 import { fetchPosts, fetchTags, fetchPopularPosts } from "../redux/slices/posts.js";
+import { fetchAuthMe } from "../redux/slices/auth.js";
 
 export const Home = () => {
   const dispatch = useDispatch();
 
-  const userData = useSelector((state) => state.auth.data);
+  const {data: userData} = useSelector((state) => state.auth);
+
   const { posts, tags } = useSelector((state) => state.posts);
 
   const [tabValue, setTabValue] = React.useState(0);
@@ -36,6 +36,11 @@ export const Home = () => {
       dispatch(fetchTags());
     }
   }, [tabValue]);
+
+  // to add an editing feature
+  React.useEffect(() => {
+    dispatch(fetchAuthMe());
+  }, []);
 
   return (
     <>
