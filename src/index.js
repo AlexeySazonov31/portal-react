@@ -19,7 +19,7 @@ root.render(
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Provider store={store}>
-          <App />
+            <App />
         </Provider>
       </BrowserRouter>
     </ThemeProvider>

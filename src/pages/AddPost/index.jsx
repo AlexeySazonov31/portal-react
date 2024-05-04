@@ -67,7 +67,7 @@ export const AddPost = () => {
           alert("Error receiving the article");
         });
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -155,20 +155,25 @@ export const AddPost = () => {
     }
   };
 
+
   // options for SimpleMDE - input main post text
+  const delay = 1000;
+  const autosavedValue = localStorage.getItem(`smde_demo`) || "Initial value";
   const options = React.useMemo(
     () => ({
       spellChecker: false,
+      uniqueId: "textPostForEasyMDE",
       maxHeight: "350px",
       autofocus: true,
       placeholder: "Введите текст...",
       status: false,
       autosave: {
         enabled: true,
-        delay: 1000,
+        uniqueId: "demo",
+        delay,
       },
     }),
-    []
+    [delay]
   );
 
   const inputFileRef = React.useRef(null);

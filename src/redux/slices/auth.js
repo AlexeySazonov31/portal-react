@@ -58,7 +58,7 @@ const authSlice = createAppSlice({
                     state.status = "loading";
                 },
                 fulfilled: (state, action) => {
-                    state.data = action.payload.data;
+                    state.data = action.payload.data.userData;
                     state.status = "loaded";
                 },
                 rejected: (state) => {

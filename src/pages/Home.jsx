@@ -33,14 +33,14 @@ export const Home = () => {
       dispatch(fetchTags());
     } else if (tabValue === 1){ // popular
       dispatch(fetchPopularPosts());
-      dispatch(fetchTags());
+      dispatch(fetchTags()); // ??? maybe only popular tags
     }
-  }, [tabValue]);
+  }, [tabValue, dispatch]);
 
   // to add an editing feature
   React.useEffect(() => {
     dispatch(fetchAuthMe());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
@@ -68,7 +68,7 @@ export const Home = () => {
                 viewsCount={obj.viewsCount}
                 commentsCount={3}
                 tags={obj.tags}
-                isEditable={userData?.userData?._id === obj.user._id}
+                isEditable={userData?._id === obj.user._id}
               />
             )
           )}

@@ -78,7 +78,6 @@ const postsSlice = createAppSlice({
         },
         {
             pending: (state, action) => {
-                console.log(action.meta.arg);
                 state.posts.items = state.posts.items.filter(obj => obj._id !== action.meta.arg );
             },
         }

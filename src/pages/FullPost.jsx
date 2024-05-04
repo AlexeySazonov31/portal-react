@@ -24,7 +24,7 @@ export const FullPost = () => {
         console.warn(err);
         alert("Error in receiving the article");
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
