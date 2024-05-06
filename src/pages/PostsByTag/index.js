@@ -62,9 +62,9 @@ export const PostsByTag = () => {
                   title={obj.title}
                   imageUrl={obj.imageUrl ? `${process.env.REACT_APP_API_URI}${obj.imageUrl}` : ""}
                   user={obj.user}
-                  updatedAt={obj.updatedAt}
+                  time={obj.createdAt}
                   viewsCount={obj.viewsCount}
-                  commentsCount={3}
+                  commentsCount={obj.countComments}
                   tags={obj.tags}
                   isEditable={userData?._id === obj.user._id}
                 />

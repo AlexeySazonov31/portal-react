@@ -1,3 +1,5 @@
+$blue: #4361ee;
+
 .root {
     display: flex;
     margin-top: 10px;
@@ -16,4 +18,21 @@
     button {
         margin-top: 10px;
     }
+}
+
+.listItem {
+        &:hover {
+        .editButtons {
+            opacity: 1;
+        }
+    }
+}
+.editButtons {
+    position: absolute;
+    right: 15px;
+    top: 22px;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 10px;
+    opacity: 0;
+    transition: all 0.15s ease-in-out;
 }

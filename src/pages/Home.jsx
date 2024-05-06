@@ -70,9 +70,9 @@ export const Home = () => {
                     : ""
                 }
                 user={obj.user}
-                updatedAt={obj.updatedAt}
+                time={obj.createdAt}
                 viewsCount={obj.viewsCount}
-                commentsCount={3}
+                commentsCount={obj.countComments}
                 tags={obj.tags}
                 isEditable={userData?._id === obj.user._id}
               />
@@ -82,7 +82,7 @@ export const Home = () => {
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
-            addComment={false}
+            add={false}
             items={[
               {
                 user: {

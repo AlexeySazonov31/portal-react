@@ -29,8 +29,46 @@ const commentsSlice = createAppSlice({
                 },
             }
         ),
+        fetchCreateCommentForPost: create.asyncThunk(async ({ id, fields }) => {
+            const res = await axios.post(`/comments/${id}`, fields);
+            return res;
+        },
+            {
+                pending: (state) => {
+                    state.items = [];
+                    state.status = "loading";
+                },
+                fulfilled: (state, action) => {
+                    state.items = action.payload.data;
+                    state.status = "loaded";
+                },
+                rejected: (state) => {
+                    state.items = [];
+                    state.status = "error";
+                },
+            }
+        ),
+        fetchRemoveComment: create.asyncThunk(async (tagId) => {
+            const res = await axios.delete(`/comments/${tagId}`);
+            return res;
+        },
+            {
+                pending: (state) => {
+                    state.items = [];
+                    state.status = "loading";
+                },
+                fulfilled: (state, action) => {
+                    state.items = action.payload.data;
+                    state.status = "loaded";
+                },
+                rejected: (state) => {
+                    state.items = [];
+                    state.status = "error";
+                },
+            }
+        ),
     }),
 })
 
 export const commentsReducer = commentsSlice.reducer;
-export const { fetchCommentsByPost } = commentsSlice.actions;
+export const { fetchCommentsByPost, fetchCreateCommentForPost, fetchRemoveComment } = commentsSlice.actions;

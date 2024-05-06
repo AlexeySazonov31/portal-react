@@ -2,41 +2,32 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { SideBlock } from "../SideBlock";
+import { UserInfo } from "../UserInfo";
 
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Skeleton from "@mui/material/Skeleton";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import styles from "./CommentsBlock.module.scss";
 
 import { selectIsAuth } from "../../redux/slices/auth";
 
-import axios from "../../axios";
-import { useSelector } from "react-redux";
-
-// [
-//     {
-//       user: {
-//         fullName: "Вася Пупкин",
-//         avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-//       },
-//       text: "Это тестовый комментарий 555555",
-//       createdAt: "2024-05-06T08:35:54.317+00:00",
-//     },
-// ]
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCommentsByPost, fetchCreateCommentForPost, fetchRemoveComment } from "../../redux/slices/comments";
 
 export const CommentsBlock = ({ items, isLoading = true, add }) => {
+  const dispatch = useDispatch();
 
   const { data: userData } = useSelector((state) => state.auth);
 
   const { id } = useParams();
-
 
   const isAuth = useSelector(selectIsAuth);
 
@@ -44,12 +35,31 @@ export const CommentsBlock = ({ items, isLoading = true, add }) => {
 
   const onSubmit = async () => {
     try {
-    //   const { data } = await axios.patch(`/posts/${id}`, fields);
-
+      if (isAuth && comment.length > 0) {
+        const fields = {
+          text: comment,
+        };
+        dispatch(fetchCreateCommentForPost({ id, fields }));
+        setComment("");
+      } else {
+        alert("To leave a comment, you need to log in!");
+      }
     } catch (error) {
       console.warn(error);
-      alert("Error uploading the file!");
+      alert("Error post comment, please try again!");
     }
+  };
+
+  const onClickRemove = async (tagId) => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+        try {
+            dispatch(fetchRemoveComment(tagId));
+        } catch (error) {
+            console.warn(error);
+            dispatch(fetchCommentsByPost(id));
+            alert("Couldn't delete this comment, please try again!");
+        }
+      }
   };
 
   return (
@@ -57,24 +67,32 @@ export const CommentsBlock = ({ items, isLoading = true, add }) => {
       <List>
         {(isLoading ? [...Array(5)] : items).map((obj, index) => (
           <React.Fragment key={index}>
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                {isLoading ? (
-                  <Skeleton variant="circular" width={40} height={40} />
-                ) : (
-                  <Avatar alt={obj.user.fullName} src={obj.user.avatarUrl ? process.env.REACT_APP_API_URI + obj.user.avatarUrl : ""} />
-                )}
-              </ListItemAvatar>
-              {isLoading ? (
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <Skeleton variant="text" height={25} width={120} />
-                  <Skeleton variant="text" height={18} width={230} />
+            <ListItem alignItems="flex-start" className={styles.listItem}>
+              {(!isLoading && userData._id === obj.user._id) && (
+                <div className={styles.editButtons}>
+                  <IconButton onClick={() => onClickRemove(obj._id)} color="secondary">
+                    <DeleteIcon />
+                  </IconButton>
                 </div>
+              )}
+              {isLoading ? (
+                <>
+                  <ListItemAvatar>
+                    <Skeleton variant="circular" width={40} height={40} />
+                  </ListItemAvatar>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <Skeleton variant="text" height={25} width={120} />
+                    <Skeleton variant="text" height={18} width={230} />
+                  </div>
+                </>
               ) : (
-                <ListItemText
-                  primary={obj.user.fullName}
-                  secondary={obj.text}
-                />
+                <>
+                  <UserInfo
+                    {...obj.user}
+                    time={obj.updatedAt}
+                    comment={obj.text}
+                  />
+                </>
               )}
             </ListItem>
             <Divider variant="inset" component="li" />
@@ -86,19 +104,24 @@ export const CommentsBlock = ({ items, isLoading = true, add }) => {
         <div className={styles.root}>
           <Avatar
             classes={{ root: styles.avatar }}
-            src={userData.avatarUrl ? process.env.REACT_APP_API_URI + userData.avatarUrl : ""}
+            src={
+              userData?.avatarUrl
+                ? process.env.REACT_APP_API_URI + userData.avatarUrl
+                : ""
+            }
           />
           <div className={styles.form}>
             <TextField
               label="Write a comment"
               variant="outlined"
-              maxRows={10}
-              multiline
               fullWidth
               value={comment}
               onChange={(e) => setComment(e.target.value)}
+              disabled={!isAuth}
             />
-            <Button variant="contained">Send</Button>
+            <Button variant="contained" disabled={!isAuth} onClick={onSubmit}>
+              Send
+            </Button>
           </div>
         </div>
       )}

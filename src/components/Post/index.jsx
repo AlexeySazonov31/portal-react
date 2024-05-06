@@ -18,7 +18,7 @@ import { fetchRemovePost } from "../../redux/slices/posts";
 export const Post = ({
   id,
   title,
-  updatedAt,
+  time,
   imageUrl,
   user,
   viewsCount,
@@ -63,7 +63,7 @@ export const Post = ({
         />
       )}
       <div className={styles.wrapper}>
-        <UserInfo {...user} updatedAt={updatedAt} />
+        <UserInfo avatarUrl={user.avatarUrl} fullName={user.fullName} time={time} />
         <div className={styles.indention}>
           <h2
             className={clsx(styles.title, { [styles.titleFull]: isFullPost })}

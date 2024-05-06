@@ -19,7 +19,9 @@ export const store = configureStore({
           "auth/fetchAuthMe/fulfilled", 
           "posts/fetchPosts/fulfilled", 
           "posts/fetchTags/fulfilled",
-          "posts/fetchPopularPosts/fulfilled"
+          "posts/fetchPopularPosts/fulfilled",
+          "comments/fetchCommentsByPost/fulfilled",
+          "comments/fetchCreateCommentForPost/fulfilled",
         ],
       },
     }),

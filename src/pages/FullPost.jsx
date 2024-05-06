@@ -12,7 +12,7 @@ import { fetchCommentsByPost } from "../redux/slices/comments";
 export const FullPost = () => {
   const dispatch = useDispatch();
   const { items: comments, status: isCommentsLoading } = useSelector(state => state.comments);
-  const [data, setData] = React.useState();
+  const [data, setData] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const { id } = useParams();
 
@@ -45,7 +45,7 @@ export const FullPost = () => {
             : ""
         }
         user={data.user}
-        updatedAt={data.updatedAt}
+        time={data.createdAt}
         viewsCount={data.viewsCount}
         commentsCount={comments.length}
         tags={data.tags}
