@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { postsReducer } from "./slices/posts";
 import { authReducer } from "./slices/auth";
+import { commentsReducer } from "./slices/comments";
 
 const reducer = combineReducers({
   posts: postsReducer,
-  auth: authReducer
+  auth: authReducer,
+  comments: commentsReducer,
 });
 
 export const store = configureStore({

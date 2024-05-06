@@ -43,7 +43,7 @@ export const AddPost = () => {
   const [postInfo, setPostInfo] = React.useState(initialPostInfo);
   const [textPost, setTextPost] = React.useState("");
 
-  // for updating exist post
+  // for get exist post if editing
   React.useEffect(() => {
     if (id) {
       setIsLoading(true);

@@ -73,6 +73,7 @@ export const PostsByTag = () => {
           </Grid>
           <Grid xs={4} item>
             <CommentsBlock
+              addComment={false}
               items={[
                 {
                   user: {

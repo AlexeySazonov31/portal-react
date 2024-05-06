@@ -26,8 +26,6 @@ export const Home = () => {
     setTabValue(newValue);
   };
 
-  console.log(userData);
-  
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
@@ -84,6 +82,7 @@ export const Home = () => {
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
+            addComment={false}
             items={[
               {
                 user: {

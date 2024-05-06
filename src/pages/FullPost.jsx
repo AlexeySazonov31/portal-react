@@ -2,13 +2,16 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { Post } from "../components/Post";
-import { AddComment } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios";
+import { useDispatch, useSelector } from "react-redux";
 
 import ReactMarkdown from "react-markdown";
+import { fetchCommentsByPost } from "../redux/slices/comments";
 
 export const FullPost = () => {
+  const dispatch = useDispatch();
+  const { items: comments, status: isCommentsLoading } = useSelector(state => state.comments);
   const [data, setData] = React.useState();
   const [isLoading, setIsLoading] = React.useState(true);
   const { id } = useParams();
@@ -24,6 +27,7 @@ export const FullPost = () => {
         console.warn(err);
         alert("Error in receiving the article");
       });
+      dispatch(fetchCommentsByPost(id));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (isLoading) {
@@ -43,35 +47,17 @@ export const FullPost = () => {
         user={data.user}
         updatedAt={data.updatedAt}
         viewsCount={data.viewsCount}
-        commentsCount={3}
+        commentsCount={comments.length}
         tags={data.tags}
         isFullPost
       >
         <ReactMarkdown children={data.text} />
       </Post>
       <CommentsBlock
-        items={[
-          {
-            user: {
-              fullName: "Вася Пупкин",
-              avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-            },
-            text: "Это тестовый комментарий 555555",
-            createdAt: "2024-05-06T08:35:54.317+00:00",
-          },
-          {
-            user: {
-              fullName: "Иван Иванов",
-              avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-            },
-            text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-            createdAt: "2024-05-06T08:35:54.317+00:00",
-          },
-        ]}
-        isLoading={false}
-      >
-        <AddComment />
-      </CommentsBlock>
+        add={true}
+        items={comments}
+        isLoading={isCommentsLoading === "loading"}
+      />
     </>
   );
 };
