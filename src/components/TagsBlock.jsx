@@ -20,7 +20,7 @@ export const TagsBlock = ({ items, isLoading = true }) => {
           <Link
             key={item}
             style={{ textDecoration: "none", color: "black" }}
-            href={`/tags/${name}`}
+            to={`/tag/${name}`}
           >
             <ListItem key={item} disablePadding>
               <ListItemButton>

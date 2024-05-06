@@ -7,13 +7,16 @@ import Grid from "@mui/material/Grid";
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
-import { fetchPosts, fetchTags, fetchPopularPosts } from "../redux/slices/posts.js";
-import { fetchAuthMe } from "../redux/slices/auth.js";
+import {
+  fetchPosts,
+  fetchTags,
+  fetchPopularPosts,
+} from "../redux/slices/posts.js";
 
 export const Home = () => {
   const dispatch = useDispatch();
 
-  const {data: userData} = useSelector((state) => state.auth);
+  const { data: userData } = useSelector((state) => state.auth);
 
   const { posts, tags } = useSelector((state) => state.posts);
 
@@ -23,31 +26,32 @@ export const Home = () => {
     setTabValue(newValue);
   };
 
-
+  console.log(userData);
+  
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
   React.useEffect(() => {
-    if( tabValue === 0 ){ // normal
+    if (tabValue === 0) {
+      // normal
       dispatch(fetchPosts());
       dispatch(fetchTags());
-    } else if (tabValue === 1){ // popular
+    } else if (tabValue === 1) {
+      // popular
       dispatch(fetchPopularPosts());
       dispatch(fetchTags()); // ??? maybe only popular tags
     }
   }, [tabValue, dispatch]);
 
   // to add an editing feature
-  React.useEffect(() => {
-    dispatch(fetchAuthMe());
-  }, [dispatch]);
 
   return (
     <>
       <Tabs
         style={{ marginBottom: 15 }}
         aria-label="tabs for sorting posts"
-        value={tabValue} onChange={handleChangeTab}
+        value={tabValue}
+        onChange={handleChangeTab}
       >
         <Tab label="New" />
         <Tab label="Popular" />
@@ -62,7 +66,11 @@ export const Home = () => {
                 id={obj._id}
                 key={obj._id}
                 title={obj.title}
-                imageUrl={ obj.imageUrl ? `${process.env.REACT_APP_API_URI}${obj.imageUrl}` : ""}
+                imageUrl={
+                  obj.imageUrl
+                    ? `${process.env.REACT_APP_API_URI}${obj.imageUrl}`
+                    : ""
+                }
                 user={obj.user}
                 updatedAt={obj.updatedAt}
                 viewsCount={obj.viewsCount}
@@ -74,10 +82,7 @@ export const Home = () => {
           )}
         </Grid>
         <Grid xs={4} item>
-          <TagsBlock
-            items={tags.items}
-            isLoading={isTagsLoading}
-          />
+          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
             items={[
               {

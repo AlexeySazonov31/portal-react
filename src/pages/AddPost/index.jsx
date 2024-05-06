@@ -155,25 +155,17 @@ export const AddPost = () => {
     }
   };
 
-
   // options for SimpleMDE - input main post text
-  const delay = 1000;
-  const autosavedValue = localStorage.getItem(`smde_demo`) || "Initial value";
   const options = React.useMemo(
     () => ({
       spellChecker: false,
       uniqueId: "textPostForEasyMDE",
       maxHeight: "350px",
       autofocus: true,
-      placeholder: "Введите текст...",
+      placeholder: "Enter the text of the article...",
       status: false,
-      autosave: {
-        enabled: true,
-        uniqueId: "demo",
-        delay,
-      },
     }),
-    [delay]
+    []
   );
 
   const inputFileRef = React.useRef(null);
@@ -186,7 +178,14 @@ export const AddPost = () => {
   return (
     <>
       {isEditing && isLoading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", height: "70vh", alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            height: "70vh",
+            alignItems: "center",
+          }}
+        >
           <CircularProgress />
         </Box>
       ) : (
@@ -250,7 +249,7 @@ export const AddPost = () => {
           <TextField
             classes={{ root: styles.title }}
             variant="standard"
-            placeholder="Заголовок статьи..."
+            placeholder="The title of the article..."
             fullWidth
             value={postInfo.title}
             name="title"
@@ -259,7 +258,7 @@ export const AddPost = () => {
           <TextField
             classes={{ root: styles.tags }}
             variant="standard"
-            placeholder="Тэги"
+            placeholder="Tags"
             fullWidth
             name="tags"
             value={postInfo.tags}

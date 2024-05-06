@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { Post } from "../components/Post";
-import { Index } from "../components/AddComment";
+import { AddComment } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios";
 
@@ -35,7 +35,11 @@ export const FullPost = () => {
       <Post
         id={data._id}
         title={data.title}
-        imageUrl={ data.imageUrl ? `${process.env.REACT_APP_API_URI}${data.imageUrl}` : ""}
+        imageUrl={
+          data.imageUrl
+            ? `${process.env.REACT_APP_API_URI}${data.imageUrl}`
+            : ""
+        }
         user={data.user}
         updatedAt={data.updatedAt}
         viewsCount={data.viewsCount}
@@ -43,7 +47,7 @@ export const FullPost = () => {
         tags={data.tags}
         isFullPost
       >
-        <ReactMarkdown children={data.text}/>
+        <ReactMarkdown children={data.text} />
       </Post>
       <CommentsBlock
         items={[
@@ -53,6 +57,7 @@ export const FullPost = () => {
               avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
             },
             text: "Это тестовый комментарий 555555",
+            createdAt: "2024-05-06T08:35:54.317+00:00",
           },
           {
             user: {
@@ -60,11 +65,12 @@ export const FullPost = () => {
               avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
             },
             text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
+            createdAt: "2024-05-06T08:35:54.317+00:00",
           },
         ]}
         isLoading={false}
       >
-        <Index />
+        <AddComment />
       </CommentsBlock>
     </>
   );

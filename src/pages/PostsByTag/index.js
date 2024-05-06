@@ -1,92 +1,100 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+import { useDispatch, useSelector } from "react-redux";
+
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 import { Post } from "../../components/Post";
-import axios from "../../axios";
+import { CommentsBlock } from "../../components/CommentsBlock";
+
+import { clearPosts, fetchPostsByTag } from "../../redux/slices/posts";
 
 export const PostsByTag = () => {
-  const [data, setData] = React.useState();
-  const [isLoading, setIsLoading] = React.useState(true);
-  const { id } = useParams();
+  const dispatch = useDispatch();
 
-//   React.useEffect(() => {
-//     axios
-//       .get(`/posts/${id}`)
-//       .then((res) => {
-//         setData(res.data);
-//         setIsLoading(false);
-//       })
-//       .catch((err) => {
-//         console.warn(err);
-//         alert("Error in receiving the article");
-//       });
-//   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const { data: userData } = useSelector((state) => state.auth);
+  const { posts } = useSelector((state) => state.posts);
 
-  if (isLoading) {
-    return <Post isLoading={isLoading} isFullPost />;
-  }
+  const { tag } = useParams();
+
+  const isLoading = posts.status === "loading";
+
+  React.useEffect(() => {
+    dispatch(clearPosts());
+    dispatch(fetchPostsByTag(tag));
+  }, [dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   return (
     <>
-    {/* <Tabs
-      style={{ marginBottom: 15 }}
-      aria-label="tabs for sorting posts"
-      value={tabValue} onChange={handleChangeTab}
-    >
-      <Tab label="New" />
-      <Tab label="Popular" />
-    </Tabs>
-    <Grid container spacing={4}>
-      <Grid xs={8} item>
-        {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, item) =>
-          isPostsLoading ? (
-            <Post key={item} isLoading={isPostsLoading} />
-          ) : (
-            <Post
-              id={obj._id}
-              key={obj._id}
-              title={obj.title}
-              imageUrl={ obj.imageUrl ? `${process.env.REACT_APP_API_URI}${obj.imageUrl}` : ""}
-              user={obj.user}
-              updatedAt={obj.updatedAt}
-              viewsCount={obj.viewsCount}
-              commentsCount={3}
-              tags={obj.tags}
-              isEditable={userData?._id === obj.user._id}
+      {!isLoading && posts.items.length === 0 ? (
+        <div style={{
+          textAlign: "center",
+          marginTop: "100px"
+        }}>
+          <Typography variant="h1" sx={{
+            fontSize: "35px",
+            fontWeight: "bold",
+            mb: 4,
+          }}>No posts for <span style={{ fontStyle: "italic" }}># {tag}</span></Typography>
+          <Link to="/">
+            <Button variant="contained">Home Page</Button>
+          </Link>
+        </div>
+      ) : (
+        <Grid container spacing={4}>
+          <Grid xs={8} item>
+            <Typography variant="h1" sx={{
+              fontSize: "35px",
+              fontWeight: "bold",
+              mb: 4,
+            }}># {tag}</Typography>
+            {(isLoading ? [...Array(3)] : posts.items).map((obj, item) =>
+              isLoading ? (
+                <Post key={item} isLoading={isLoading} />
+              ) : (
+                <Post
+                  id={obj._id}
+                  key={obj._id}
+                  title={obj.title}
+                  imageUrl={obj.imageUrl ? `${process.env.REACT_APP_API_URI}${obj.imageUrl}` : ""}
+                  user={obj.user}
+                  updatedAt={obj.updatedAt}
+                  viewsCount={obj.viewsCount}
+                  commentsCount={3}
+                  tags={obj.tags}
+                  isEditable={userData?._id === obj.user._id}
+                />
+              )
+            )}
+          </Grid>
+          <Grid xs={4} item>
+            <CommentsBlock
+              items={[
+                {
+                  user: {
+                    fullName: "Вася Пупкин",
+                    avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
+                  },
+                  text: "Это тестовый комментарий",
+                },
+                {
+                  user: {
+                    fullName: "Иван Иванов",
+                    avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
+                  },
+                  text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
+                },
+              ]}
+              isLoading={false}
             />
-          )
-        )}
-      </Grid>
-      <Grid xs={4} item>
-        <TagsBlock
-          items={tags.items}
-          isLoading={isTagsLoading}
-        />
-        <CommentsBlock
-          items={[
-            {
-              user: {
-                fullName: "Вася Пупкин",
-                avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-              },
-              text: "Это тестовый комментарий",
-            },
-            {
-              user: {
-                fullName: "Иван Иванов",
-                avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-              },
-              text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-            },
-          ]}
-          isLoading={false}
-        />
-      </Grid>
-    </Grid> */}
-  </>
+          </Grid>
+        </Grid>
+      )}
+
+    </>
   );
 };

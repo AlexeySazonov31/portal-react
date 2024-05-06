@@ -33,7 +33,7 @@ export const Login = () => {
     if (!data.payload) {
       console.log(data.error);
       return alert(
-        `Failed to register new Account. ${data.error.message ?? ""}`
+        `Failed to login, try again. ${data.error.message ?? ""}`
       );
     }
 
@@ -44,7 +44,7 @@ export const Login = () => {
 
   if (isAuth) {
     return <Navigate to="/" />;
-  }
+  } 
 
   return (
     <Paper classes={{ root: styles.root }}>

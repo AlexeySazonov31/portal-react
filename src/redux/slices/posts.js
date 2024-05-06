@@ -35,6 +35,25 @@ const postsSlice = createAppSlice({
                 },
             }
         ),
+        fetchPostsByTag: create.asyncThunk(async (tag) => {
+            const res = await axios.get(`/posts-by-tag/${tag}`);
+            return res;
+        },
+            {
+                pending: (state) => {
+                    state.posts.items = [];
+                    state.posts.status = "loading";
+                },
+                fulfilled: (state, action) => {
+                    state.posts.items = action.payload.data;
+                    state.posts.status = "loaded";
+                },
+                rejected: (state) => {
+                    state.posts.items = [];
+                    state.posts.status = "error";
+                },
+            }
+        ),
         fetchPopularPosts: create.asyncThunk(async () => {
             const res = await axios.get("/posts/popular");
             return res;
@@ -73,17 +92,23 @@ const postsSlice = createAppSlice({
                 },
             }
         ),
-        fetchRemovePost: create.asyncThunk( async (id) => {
+        fetchRemovePost: create.asyncThunk(async (id) => {
             await axios.delete(`/posts/${id}`);
         },
-        {
-            pending: (state, action) => {
-                state.posts.items = state.posts.items.filter(obj => obj._id !== action.meta.arg );
+            {
+                pending: (state, action) => {
+                    state.posts.items = state.posts.items.filter(obj => obj._id !== action.meta.arg);
+                },
             },
+        ),
+        clearPosts: (state) => {
+            state.posts = {
+                items: [],
+                status: "loading",
+            };
         }
-    ),
     }),
 })
 
 export const postsReducer = postsSlice.reducer;
-export const { fetchPosts, fetchPopularPosts, fetchTags, fetchRemovePost } = postsSlice.actions;
+export const { fetchPosts, fetchPopularPosts, fetchPostsByTag, fetchTags, fetchRemovePost, clearPosts } = postsSlice.actions;
