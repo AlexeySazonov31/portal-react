@@ -1,13 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import { Post } from "../components/Post";
-import { CommentsBlock } from "../components/CommentsBlock";
-import axios from "../axios";
+import { Post } from "../../components/Post";
+import { CommentsBlock } from "../../components/CommentsBlock";
+import axios from "../../axios";
 import { useDispatch, useSelector } from "react-redux";
 
 import ReactMarkdown from "react-markdown";
-import { fetchCommentsByPost } from "../redux/slices/comments";
+import { fetchCommentsByPost } from "../../redux/slices/comments";
 
 export const FullPost = () => {
   const dispatch = useDispatch();

@@ -26,8 +26,8 @@ export const Footer = () => {
 
           <Typography className={styles.text} variant="p">
             Explore my Portal React App! <br />
-            Harnessing the power of React, Redux, and Material-UI, backed by
-            Express and MongoDB, with JWT authentication and Multer for seamless
+            Harnessing the power of React, Redux, and Material-UI, backend by
+            Express and MongoDB, with JWT authentication and Multer for
             file management.
           </Typography>
         </div>

@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
 import { Post } from "../../components/Post";
-import { TagsBlock } from "../../components/TagsBlock.jsx";
+import { TagsBlock } from "../../components/TagsBlock/TagsBlock.jsx";
 import { CommentsBlock } from "../../components/CommentsBlock";
 
 import {

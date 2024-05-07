@@ -1,4 +1,4 @@
-export { FullPost } from "./FullPost";
+export { FullPost } from "./FullPost/FullPost";
 export { AddPost } from "./AddPost";
 export { Registration } from "./Registration";
 export { Login } from "./Login";
