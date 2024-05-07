@@ -11,8 +11,14 @@ import { Post } from "../../components/Post";
 import { CommentsBlock } from "../../components/CommentsBlock";
 
 import { clearPosts, fetchPostsByTag } from "../../redux/slices/posts";
+import {
+  fetchPosts,
+  fetchTags,
+  fetchPopularPosts,
+} from "../../redux/slices/posts.js";
 
 export const PostsByTag = () => {
+
   const dispatch = useDispatch();
 
   const { data: userData } = useSelector((state) => state.auth);

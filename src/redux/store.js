@@ -24,6 +24,7 @@ export const store = configureStore({
           "comments/fetchCreateCommentForPost/fulfilled",
           "comments/fetchLastComments/fulfilled",
           "comments/fetchRemoveComment/fulfilled",
+          "posts/fetchPostsByTag/fulfilled",
           
         ],
       },

@@ -67,8 +67,6 @@ export const CommentsBlock = ({ items, isLoading = true, add }) => {
     }
   };
 
-  console.log(items);
-
   return (
     <SideBlock title="Comments">
       <List>
