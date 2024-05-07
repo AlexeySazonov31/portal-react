@@ -8,9 +8,9 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-import { Post } from "@components";
-import { TagsBlock } from "@components/TagsBlock.jsx";
-import { CommentsBlock } from "@components/CommentsBlock";
+import { Post } from "../../components/Post";
+import { TagsBlock } from "../../components/TagsBlock.jsx";
+import { CommentsBlock } from "../../components/CommentsBlock";
 
 import {
   fetchPosts,
@@ -18,7 +18,7 @@ import {
   fetchPopularPosts,
 } from "../../redux/slices/posts.js";
 import { fetchLastComments } from "../../redux/slices/comments.js";
-import { clearPosts, fetchPostsByTag } from "../../redux/slices/posts";
+import { fetchPostsByTag } from "../../redux/slices/posts";
 
 export const Home = ({ postsByTag = false }) => {
   const { tag } = useParams();
@@ -57,7 +57,7 @@ export const Home = ({ postsByTag = false }) => {
     }
 
     dispatch(fetchLastComments());
-  }, [dispatch, tabValue, tag]);
+  }, [dispatch, tabValue, tag]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -96,20 +96,20 @@ export const Home = ({ postsByTag = false }) => {
           <Tab label="Popular" />
         </Tabs>
       )}
+      {tag && postsByTag && posts.items.length !== 0 && (
+        <Typography
+          variant="h1"
+          sx={{
+            fontSize: "35px",
+            fontWeight: "bold",
+            mb: 4,
+          }}
+        >
+          # {tag}
+        </Typography>
+      )}
       <Grid container spacing={4}>
         <Grid xs={8} item>
-          {tag && postsByTag && posts.items.length !== 0 && (
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: "35px",
-                fontWeight: "bold",
-                mb: 4,
-              }}
-            >
-              # {tag}
-            </Typography>
-          )}
           {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, item) =>
             isPostsLoading ? (
               <Post key={item} isLoading={isPostsLoading} />
