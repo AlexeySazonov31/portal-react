@@ -10,6 +10,25 @@ const commentsSlice = createAppSlice({
     name: "comments",
     initialState,
     reducers: (create) => ({
+        fetchLastComments: create.asyncThunk(async (id) => {
+            const res = await axios.get("/comments");
+            return res;
+        },
+            {
+                pending: (state) => {
+                    state.items = [];
+                    state.status = "loading";
+                },
+                fulfilled: (state, action) => {
+                    state.items = action.payload.data;
+                    state.status = "loaded";
+                },
+                rejected: (state) => {
+                    state.items = [];
+                    state.status = "error";
+                },
+            }
+        ),
         fetchCommentsByPost: create.asyncThunk(async (id) => {
             const res = await axios.get(`/comments/${id}`);
             return res;
@@ -71,4 +90,4 @@ const commentsSlice = createAppSlice({
 })
 
 export const commentsReducer = commentsSlice.reducer;
-export const { fetchCommentsByPost, fetchCreateCommentForPost, fetchRemoveComment } = commentsSlice.actions;
+export const { fetchCommentsByPost, fetchLastComments, fetchCreateCommentForPost, fetchRemoveComment } = commentsSlice.actions;

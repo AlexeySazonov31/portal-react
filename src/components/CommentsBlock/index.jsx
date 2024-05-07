@@ -1,9 +1,10 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import { SideBlock } from "../SideBlock";
 import { UserInfo } from "../UserInfo";
 
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
@@ -20,7 +21,11 @@ import styles from "./CommentsBlock.module.scss";
 import { selectIsAuth } from "../../redux/slices/auth";
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCommentsByPost, fetchCreateCommentForPost, fetchRemoveComment } from "../../redux/slices/comments";
+import {
+  fetchCommentsByPost,
+  fetchCreateCommentForPost,
+  fetchRemoveComment,
+} from "../../redux/slices/comments";
 
 export const CommentsBlock = ({ items, isLoading = true, add }) => {
   const dispatch = useDispatch();
@@ -52,37 +57,47 @@ export const CommentsBlock = ({ items, isLoading = true, add }) => {
 
   const onClickRemove = async (tagId) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-        try {
-            dispatch(fetchRemoveComment(tagId));
-        } catch (error) {
-            console.warn(error);
-            dispatch(fetchCommentsByPost(id));
-            alert("Couldn't delete this comment, please try again!");
-        }
+      try {
+        dispatch(fetchRemoveComment(tagId));
+      } catch (error) {
+        console.warn(error);
+        dispatch(fetchCommentsByPost(id));
+        alert("Couldn't delete this comment, please try again!");
       }
+    }
   };
+
+  console.log(items);
 
   return (
     <SideBlock title="Comments">
       <List>
         {(isLoading ? [...Array(5)] : items).map((obj, index) => (
           <React.Fragment key={index}>
+            {add ? (
+              <>
             <ListItem alignItems="flex-start" className={styles.listItem}>
-              {(!isLoading && userData._id === obj.user._id) && (
-                <div className={styles.editButtons}>
-                  <IconButton onClick={() => onClickRemove(obj._id)} color="secondary">
-                    <DeleteIcon />
-                  </IconButton>
-                </div>
-              )}
+              {add &&
+                userData?._id &&
+                obj?.user &&
+                userData._id === obj.user._id && (
+                  <div className={styles.editButtons}>
+                    <IconButton
+                      onClick={() => onClickRemove(obj._id)}
+                      color="secondary"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                )}
               {isLoading ? (
                 <>
                   <ListItemAvatar>
                     <Skeleton variant="circular" width={40} height={40} />
                   </ListItemAvatar>
                   <div style={{ display: "flex", flexDirection: "column" }}>
-                    <Skeleton variant="text" height={25} width={120} />
-                    <Skeleton variant="text" height={18} width={230} />
+                    <Skeleton variant="text" height={25} width={130} />
+                    <Skeleton variant="text" height={18} width={240} />
                   </div>
                 </>
               ) : (
@@ -96,6 +111,47 @@ export const CommentsBlock = ({ items, isLoading = true, add }) => {
               )}
             </ListItem>
             <Divider variant="inset" component="li" />
+            </>
+            ) : (
+              <Link to={!add && obj?.post ? `/posts/${obj?.post}` : ""} style={{ textDecoration: 'none', color: "#000" }}>
+              <ListItemButton alignItems="flex-start" className={styles.listItem}>
+                {add &&
+                  userData?._id &&
+                  obj?.user &&
+                  userData._id === obj.user._id && (
+                    <div className={styles.editButtons}>
+                      <IconButton
+                        onClick={() => onClickRemove(obj._id)}
+                        color="secondary"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
+                  )}
+                {isLoading ? (
+                  <>
+                    <ListItemAvatar>
+                      <Skeleton variant="circular" width={40} height={40} />
+                    </ListItemAvatar>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <Skeleton variant="text" height={25} width={130} />
+                      <Skeleton variant="text" height={18} width={240} />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <UserInfo
+                      {...obj.user}
+                      time={obj.updatedAt}
+                      comment={obj.text}
+                    />
+                  </>
+                )}
+              </ListItemButton>
+              <Divider variant="inset" component="li" />
+            </Link>
+            )}
+
           </React.Fragment>
         ))}
       </List>

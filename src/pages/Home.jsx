@@ -12,6 +12,7 @@ import {
   fetchTags,
   fetchPopularPosts,
 } from "../redux/slices/posts.js";
+import { fetchLastComments } from "../redux/slices/comments.js";
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ export const Home = () => {
   const { data: userData } = useSelector((state) => state.auth);
 
   const { posts, tags } = useSelector((state) => state.posts);
+  const comments = useSelector((state) => state.comments);
 
   const [tabValue, setTabValue] = React.useState(0);
 
@@ -28,6 +30,7 @@ export const Home = () => {
 
   const isPostsLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
+  const isCommentsLoading = comments.status === "loading";
 
   React.useEffect(() => {
     if (tabValue === 0) {
@@ -39,6 +42,7 @@ export const Home = () => {
       dispatch(fetchPopularPosts());
       dispatch(fetchTags()); // ??? maybe only popular tags
     }
+    dispatch(fetchLastComments());
   }, [tabValue, dispatch]);
 
   // to add an editing feature
@@ -83,23 +87,8 @@ export const Home = () => {
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
             add={false}
-            items={[
-              {
-                user: {
-                  fullName: "Вася Пупкин",
-                  avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-                },
-                text: "Это тестовый комментарий",
-              },
-              {
-                user: {
-                  fullName: "Иван Иванов",
-                  avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-                },
-                text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-              },
-            ]}
-            isLoading={false}
+            items={comments.items}
+            isLoading={isCommentsLoading}
           />
         </Grid>
       </Grid>

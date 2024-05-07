@@ -22,6 +22,9 @@ export const store = configureStore({
           "posts/fetchPopularPosts/fulfilled",
           "comments/fetchCommentsByPost/fulfilled",
           "comments/fetchCreateCommentForPost/fulfilled",
+          "comments/fetchLastComments/fulfilled",
+          "comments/fetchRemoveComment/fulfilled",
+          
         ],
       },
     }),
