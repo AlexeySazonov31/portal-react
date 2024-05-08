@@ -1,0 +1,16 @@
+.root {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh;
+    justify-content: center;
+
+    .title {
+        font-size: 60px;
+
+        @media only screen and (max-width: 800px) {
+            font-size: 50px;
+            line-height: 60px;
+        }
+    }
+}

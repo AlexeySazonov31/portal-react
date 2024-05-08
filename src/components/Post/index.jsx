@@ -29,6 +29,7 @@ export const Post = ({
   isLoading,
   isEditable,
 }) => {
+
   const dispatch = useDispatch();
 
   if (isLoading) {
@@ -43,7 +44,7 @@ export const Post = ({
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
-      {isEditable && (
+      { isEditable && (
         <div className={styles.editButtons}>
           <Link to={`/posts/${id}/edit`}>
             <IconButton color="primary">

@@ -7,7 +7,12 @@ import { Footer, Header } from "./components";
 import { Home, FullPost, Registration, AddPost, Login, NotFound404 } from "./pages";
 import { fetchAuthMe } from "./redux/slices/auth";
 
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
 function App() {
+  const theme = useTheme();
+  const isMobile = !useMediaQuery(theme.breakpoints.up('md'));
 
   const dispatch = useDispatch();
 
@@ -19,7 +24,7 @@ function App() {
     <>
       <Header />
       <Container maxWidth="lg" sx={{
-        minHeight: "82vh",        
+        minHeight: isMobile ? "50vh" : "82vh",       
       }}>
         <Routes>
           <Route path="/" element={<Home />} />

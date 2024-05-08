@@ -7,6 +7,8 @@ import Tab from "@mui/material/Tab";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 import { Post } from "../../components/Post";
 import { TagsBlock } from "../../components/TagsBlock/TagsBlock.jsx";
@@ -21,15 +23,15 @@ import { fetchLastComments } from "../../redux/slices/comments.js";
 import { fetchPostsByTag } from "../../redux/slices/posts";
 
 export const Home = ({ postsByTag = false }) => {
+  const theme = useTheme();
+  const isMobile = !useMediaQuery(theme.breakpoints.up('md'));
+
   const { tag } = useParams();
-
   const dispatch = useDispatch();
-
   const { data: userData } = useSelector((state) => state.auth);
 
   const { posts, tags } = useSelector((state) => state.posts);
   const comments = useSelector((state) => state.comments);
-
   const [tabValue, setTabValue] = React.useState(0);
 
   const handleChangeTab = (e, newValue) => {
@@ -109,7 +111,7 @@ export const Home = ({ postsByTag = false }) => {
         </Typography>
       )}
       <Grid container spacing={4}>
-        <Grid xs={8} item>
+        <Grid xs={12} md={8} item>
           {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, item) =>
             isPostsLoading ? (
               <Post key={item} isLoading={isPostsLoading} />
@@ -134,10 +136,10 @@ export const Home = ({ postsByTag = false }) => {
           )}
         </Grid>
         <Grid xs={4} item>
-          {!tag && !postsByTag && (
+          {!tag && !postsByTag && !isMobile && (
             <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           )}
-          {posts.items.length !== 0 && (
+          {posts.items.length !== 0 && !isMobile && (
             <CommentsBlock
               add={false}
               items={comments.items}

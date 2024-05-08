@@ -4,6 +4,10 @@
     margin-top: 40px;
     padding: 50px 0;
     margin-bottom: 0;
+    @media only screen and (max-width: 800px) {
+      margin-top: 10px;
+      padding: 30px 0;
+    }
   }
   
   .inner {
@@ -35,4 +39,7 @@
     width: 60%;
     text-align: left;
     margin-right: 0;
+    @media only screen and (max-width: 800px) {
+      font-size: 12px;
+  }
   }

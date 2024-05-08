@@ -1,11 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { Button, Typography } from "@mui/material";
 
 import styles from "./Footer.module.scss";
+import { useSelector } from "react-redux";
+import { selectIsAuth } from "../../redux/slices/auth";
 
 export const Footer = () => {
+  const isAuth = useSelector(selectIsAuth);
+  const navigate = useNavigate();
+
+  const handleWritePost = () => {
+    console.log(isAuth);
+    if( isAuth ){
+      navigate("/posts/create");
+    } else {
+      alert("To write a post, you need to be logged in!");
+    }
+  }
   return (
     <div className={styles.root}>
       <Container maxWidth="lg">
@@ -16,12 +29,10 @@ export const Footer = () => {
             }}>
               <div className={styles.logo}>SAS BLOG</div>
             </Link>
-            <Link to="/posts/create">
               <Button variant="outlined" sx={{
                 width: "100%",
                 mt: 1,
-              }}>Write post</Button>
-            </Link>
+              }} onClick={handleWritePost}>Write post</Button>
           </div>
 
           <Typography className={styles.text} variant="p">

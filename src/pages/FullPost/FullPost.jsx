@@ -11,7 +11,10 @@ import { fetchCommentsByPost } from "../../redux/slices/comments";
 
 export const FullPost = () => {
   const dispatch = useDispatch();
+
   const { items: comments, status: isCommentsLoading } = useSelector(state => state.comments);
+  const { data: userData } = useSelector((state) => state.auth);
+
   const [data, setData] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const { id } = useParams();
@@ -50,6 +53,7 @@ export const FullPost = () => {
         commentsCount={comments.length}
         tags={data.tags}
         isFullPost
+        isEditable={userData?._id === data.user._id}
       >
         <ReactMarkdown children={data.text} />
       </Post>

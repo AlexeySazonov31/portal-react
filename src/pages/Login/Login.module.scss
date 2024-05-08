@@ -3,6 +3,10 @@
     padding: 50px;
     border: 1px solid #dedede;
     margin: 150px auto;
+    @media only screen and (max-width: 800px) {
+      padding: 30px;
+      width: 350px;
+    }
   }
   
   .field {

@@ -160,7 +160,7 @@ export const AddPost = () => {
     () => ({
       spellChecker: false,
       uniqueId: "textPostForEasyMDE",
-      maxHeight: "350px",
+      maxHeight: "250px",
       autofocus: true,
       placeholder: "Enter the text of the article...",
       status: false,
@@ -189,7 +189,7 @@ export const AddPost = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <Paper style={{ padding: 30 }}>
+        <Paper className={styles.paperAddPost}>
           <Stack
             spacing={{ xs: 1, sm: 2 }}
             sx={{
