@@ -10,6 +10,9 @@ import { fetchAuthMe } from "./redux/slices/auth";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
+
+// TODO profile page + edit profile data (reuse registration page)
+
 function App() {
   const theme = useTheme();
   const isMobile = !useMediaQuery(theme.breakpoints.up('md'));

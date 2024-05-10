@@ -18,6 +18,8 @@ import styles from "./Login.module.scss";
 import { fetchRegister, selectIsAuth } from "../../redux/slices/auth";
 import axios from "../../axios";
 
+// TODO ? add feature "email verification" ?
+
 export const Registration = () => {
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);

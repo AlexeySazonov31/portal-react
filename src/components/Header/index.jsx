@@ -17,6 +17,9 @@ export const Header = () => {
     }
   };
 
+  // TODO icon to profile page
+  // TODO button to switch light/dark mode
+
   return (
     <div className={styles.root}>
       <Container maxWidth="lg">

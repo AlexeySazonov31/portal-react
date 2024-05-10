@@ -1,5 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
+// TODO black mode + switch button
+
 export const theme = createTheme({
   shadows: Array(25).fill('none'),
   palette: {

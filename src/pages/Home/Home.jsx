@@ -7,8 +7,8 @@ import Tab from "@mui/material/Tab";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 
 import { Post } from "../../components/Post";
 import { TagsBlock } from "../../components/TagsBlock/TagsBlock.jsx";
@@ -24,7 +24,7 @@ import { fetchPostsByTag } from "../../redux/slices/posts";
 
 export const Home = ({ postsByTag = false }) => {
   const theme = useTheme();
-  const isMobile = !useMediaQuery(theme.breakpoints.up('md'));
+  const isMobile = !useMediaQuery(theme.breakpoints.up("md"));
 
   const { tag } = useParams();
   const dispatch = useDispatch();
@@ -60,6 +60,8 @@ export const Home = ({ postsByTag = false }) => {
 
     dispatch(fetchLastComments());
   }, [dispatch, tabValue, tag]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // TODO add feature "liked posts"
 
   return (
     <>

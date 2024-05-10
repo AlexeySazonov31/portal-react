@@ -67,6 +67,8 @@ export const CommentsBlock = ({ items, isLoading = true, add }) => {
     }
   };
 
+  // TODO add feature "like comment"
+
   return (
     <SideBlock title="Comments">
       <List>
@@ -74,82 +76,87 @@ export const CommentsBlock = ({ items, isLoading = true, add }) => {
           <React.Fragment key={index}>
             {add ? (
               <>
-            <ListItem alignItems="flex-start" className={styles.listItem}>
-              {add &&
-                userData?._id &&
-                obj?.user &&
-                userData._id === obj.user._id && (
-                  <div className={styles.editButtons}>
-                    <IconButton
-                      onClick={() => onClickRemove(obj._id)}
-                      color="secondary"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </div>
-                )}
-              {isLoading ? (
-                <>
-                  <ListItemAvatar>
-                    <Skeleton variant="circular" width={40} height={40} />
-                  </ListItemAvatar>
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <Skeleton variant="text" height={25} width={130} />
-                    <Skeleton variant="text" height={18} width={240} />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <UserInfo
-                    {...obj.user}
-                    time={obj.updatedAt}
-                    comment={obj.text}
-                  />
-                </>
-              )}
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            </>
-            ) : (
-              <Link to={!add && obj?.post ? `/posts/${obj?.post}` : ""} style={{ textDecoration: 'none', color: "#000" }}>
-              <ListItemButton alignItems="flex-start" className={styles.listItem}>
-                {add &&
-                  userData?._id &&
-                  obj?.user &&
-                  userData._id === obj.user._id && (
-                    <div className={styles.editButtons}>
-                      <IconButton
-                        onClick={() => onClickRemove(obj._id)}
-                        color="secondary"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </div>
+                <ListItem alignItems="flex-start" className={styles.listItem}>
+                  {add &&
+                    userData?._id &&
+                    obj?.user &&
+                    userData._id === obj.user._id && (
+                      <div className={styles.editButtons}>
+                        <IconButton
+                          onClick={() => onClickRemove(obj._id)}
+                          color="secondary"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </div>
+                    )}
+                  {isLoading ? (
+                    <>
+                      <ListItemAvatar>
+                        <Skeleton variant="circular" width={40} height={40} />
+                      </ListItemAvatar>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <Skeleton variant="text" height={25} width={130} />
+                        <Skeleton variant="text" height={18} width={240} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <UserInfo
+                        {...obj.user}
+                        time={obj.updatedAt}
+                        comment={obj.text}
+                      />
+                    </>
                   )}
-                {isLoading ? (
-                  <>
-                    <ListItemAvatar>
-                      <Skeleton variant="circular" width={40} height={40} />
-                    </ListItemAvatar>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <Skeleton variant="text" height={25} width={130} />
-                      <Skeleton variant="text" height={18} width={240} />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <UserInfo
-                      {...obj.user}
-                      time={obj.updatedAt}
-                      comment={obj.text}
-                    />
-                  </>
-                )}
-              </ListItemButton>
-              <Divider variant="inset" component="li" />
-            </Link>
+                </ListItem>
+                <Divider variant="inset" component="li" />
+              </>
+            ) : (
+              <Link
+                to={!add && obj?.post ? `/posts/${obj?.post}` : ""}
+                style={{ textDecoration: "none", color: "#000" }}
+              >
+                <ListItemButton
+                  alignItems="flex-start"
+                  className={styles.listItem}
+                >
+                  {add &&
+                    userData?._id &&
+                    obj?.user &&
+                    userData._id === obj.user._id && (
+                      <div className={styles.editButtons}>
+                        <IconButton
+                          onClick={() => onClickRemove(obj._id)}
+                          color="secondary"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </div>
+                    )}
+                  {isLoading ? (
+                    <>
+                      <ListItemAvatar>
+                        <Skeleton variant="circular" width={40} height={40} />
+                      </ListItemAvatar>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <Skeleton variant="text" height={25} width={130} />
+                        <Skeleton variant="text" height={18} width={240} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <UserInfo
+                        {...obj.user}
+                        time={obj.updatedAt}
+                        comment={obj.text}
+                      />
+                    </>
+                  )}
+                </ListItemButton>
+                <Divider variant="inset" component="li" />
+              </Link>
             )}
-
           </React.Fragment>
         ))}
       </List>

@@ -42,6 +42,8 @@ export const Post = ({
     }
   };
 
+  // TODO add feature "like post"
+
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
       { isEditable && (
